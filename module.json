@@ -1,0 +1,17 @@
+{
+	"name": "simple-dice-roller",
+	"title": "Simple Dice Roller",
+	"description": "Simple module that allows for quick rolling of common dice.",
+	"version": "1.0.0",
+	"minimumCoreVersion": "0.4.4",
+	"compatibleCoreVersion": "0.5.5",
+	"author": "Jan Ole Peek (ChalkOne)",
+	"scripts": ["./simple-dice-roller.js"],
+	"styles": [
+		"./css/simple-dice-roller.css",
+		"./css/dicefont.css"
+	],
+	"url": "https://github.com/jopeek/fvtt-simple-dice-roller",
+	"manifest": "https://raw.githubusercontent.com/jopeek/fvtt-simple-dice-roller/master/module.json",
+	"download": "https://github.com/jopeek/fvtt-simple-dice-roller/archive/master.zip"
+}

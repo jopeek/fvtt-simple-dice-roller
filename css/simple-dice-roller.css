@@ -1,0 +1,55 @@
+.simple-dice-roller-popup {
+    /* margin: -46px 0 0 46px; */
+    box-sizing: content-box;
+    font-size: 18px;
+    line-height: 36px;
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px #000;
+    color: #BBB;
+    border: 1px solid #000;
+    border-radius: 5px;
+    z-index: 30;
+}
+
+.simple-dice-roller-popup ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid #333;
+    display: flex;
+}
+
+.simple-dice-roller-popup .sdr-lastrow {
+    border-bottom: none;
+}
+
+.simple-dice-roller-popup .sdr-lastcol {
+    border-right: none;
+}
+
+.simple-dice-roller-popup .sdr-col1 {
+    width: 110px;
+    text-align: left;
+}
+
+.simple-dice-roller-popup li {
+    display: inline-block;
+    width: 48px;
+    text-align: center;
+    padding: 5px;
+    border-right: 1px solid #333;
+    height: 48px;
+    cursor: pointer;
+}
+
+.simple-dice-roller-popup li:hover {
+    color: #FFF;
+    border: 1px solid red;
+    border-bottom: 1px solid #ff6400;
+    box-shadow: 0 0 10px #ff6400;
+}
+
+.simple-dice-roller-popup li i {
+    font-size: 24px;
+    vertical-align: middle;
+}
