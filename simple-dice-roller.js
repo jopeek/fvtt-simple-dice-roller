@@ -4,7 +4,7 @@ class SimpleDiceRoller {
 
         const diceRollbtn = $(
             `
-            <li class="scene-control sdr-scene-control">
+            <li class="scene-control sdr-scene-control" data-control="simple-dice-roller" title="Simple Dice Roller">
                 <i class="fas fa-dice-d20"></i>
             
                 <ol class="control-tools">
@@ -85,34 +85,34 @@ class SimpleDiceRoller {
             user: game.user._id,
         })
 
-        this._close(html);
+        this._close(event, html);
 
     }
     
-    static async PopupSheet(evt, html) {
-        
-        evt.stopPropagation();
-
+    static async PopupSheet(event, html) {
         //console.log("SDR | clicked");
 
         if (html.find('.sdr-scene-control').hasClass('active')) {
-            this._close(html);
+            this._close(event, html);
         } else {
-            this._open(html);
+            this._open(event, html);
         }
-
     }
 
-    static async _close(html) {
+    static async _close(event, html) {
+        //console.log("SDR | closed");
         html.find('#SDRpopup').hide();
         html.find('.sdr-scene-control').removeClass('active');
         html.find('.scene-control').first().addClass('active');
+        event.stopPropagation();
     }
 
-    static async _open(html) {
+    static async _open(event, html) {
+        //console.log("SDR | opened");
         html.find('.scene-control').removeClass('active');
         html.find('#SDRpopup').show();
         html.find('.sdr-scene-control').addClass('active');
+        event.stopPropagation();
     }
 
 
