@@ -1,0 +1,7 @@
+{
+	"I18N.LANGUAGE": "Français",
+	"I18N.MAINTAINERS": ["paercebal"],
+
+	"simpleDiceRoller.maxDiceCount.name": "Nombre Maximum de Dés",
+	"simpleDiceRoller.maxDiceCount.hint": "Le nombre maximum de dés que vous pouvez lancer depuis le Simple Dice Roller."
+}

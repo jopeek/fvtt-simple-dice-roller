@@ -9,55 +9,6 @@ class SimpleDiceRoller {
             
                 <ol class="control-tools">
                     <div id="SDRpopup" class="simple-dice-roller-popup" style="display: none;">
-                        <ul>
-                            <li data-dice-type="4" data-dice-roll="1" class="sdr-col1"><i class="df-d4-4" data-dice-type="4" data-dice-roll="1"></i> d4</li>
-                            <li data-dice-type="4" data-dice-roll="2">2</li>
-                            <li data-dice-type="4" data-dice-roll="3">3</li>
-                            <li data-dice-type="4" data-dice-roll="4">4</li>
-                            <li data-dice-type="4" data-dice-roll="5" class="sdr-lastcol">5</li>
-                        </ul>
-                        <ul>
-                            <li data-dice-type="6" data-dice-roll="1" class="sdr-col1"><i class="df-d6-6" data-dice-type="6" data-dice-roll="1"></i> d6</li>
-                            <li data-dice-type="6" data-dice-roll="2">2</li>
-                            <li data-dice-type="6" data-dice-roll="3">3</li>
-                            <li data-dice-type="6" data-dice-roll="4">4</li>
-                            <li data-dice-type="6" data-dice-roll="5" class="sdr-lastcol">5</li>
-                        </ul>
-                        <ul>
-                            <li data-dice-type="8" data-dice-roll="1" class="sdr-col1"><i class="df-d8-8" data-dice-type="8" data-dice-roll="1"></i> d8</li>
-                            <li data-dice-type="8" data-dice-roll="2">2</li>
-                            <li data-dice-type="8" data-dice-roll="3">3</li>
-                            <li data-dice-type="8" data-dice-roll="4">4</li>
-                            <li data-dice-type="8" data-dice-roll="5" class="sdr-lastcol">5</li>
-                        </ul>
-                        <ul>
-                            <li data-dice-type="10" data-dice-roll="1" class="sdr-col1"><i class="df-d10-10" data-dice-type="10" data-dice-roll="1"></i> d10</li>
-                            <li data-dice-type="10" data-dice-roll="2">2</li>
-                            <li data-dice-type="10" data-dice-roll="3">3</li>
-                            <li data-dice-type="10" data-dice-roll="4">4</li>
-                            <li data-dice-type="10" data-dice-roll="5" class="sdr-lastcol">5</li>
-                        </ul>
-                        <ul>
-                            <li data-dice-type="12" data-dice-roll="1" class="sdr-col1"><i class="df-d12-12" data-dice-type="12" data-dice-roll="1"></i> d12</li>
-                            <li data-dice-type="12" data-dice-roll="2">2</li>
-                            <li data-dice-type="12" data-dice-roll="3">3</li>
-                            <li data-dice-type="12" data-dice-roll="4">4</li>
-                            <li data-dice-type="12" data-dice-roll="5" class="sdr-lastcol">5</li>
-                        </ul>
-                        <ul>
-                            <li data-dice-type="20" data-dice-roll="1" class="sdr-col1"><i class="df-d20-20" data-dice-type="20" data-dice-roll="1"></i> d20</li>
-                            <li data-dice-type="20" data-dice-roll="2">2</li>
-                            <li data-dice-type="20" data-dice-roll="3">3</li>
-                            <li data-dice-type="20" data-dice-roll="4">4</li>
-                            <li data-dice-type="20" data-dice-roll="5" class="sdr-lastcol">5</li>
-                        </ul>
-                        <ul class="sdr-lastrow">
-                            <li data-dice-type="100" data-dice-roll="1" class="sdr-col1"><i class="df-d10-10" data-dice-type="100" data-dice-roll="1"></i><i class="df-d10-10" data-dice-type="100" data-dice-roll="1"></i> d100</li>
-                            <li data-dice-type="100" data-dice-roll="2">2</li>
-                            <li data-dice-type="100" data-dice-roll="3">3</li>
-                            <li data-dice-type="100" data-dice-roll="4">4</li>
-                            <li data-dice-type="100" data-dice-roll="5" class="sdr-lastcol">5</li>
-                        </ul>
                     </div>
                 </ol>
             </li>
@@ -66,10 +17,95 @@ class SimpleDiceRoller {
 
         html.append(diceRollbtn);
 
-        html.find('.simple-dice-roller-popup li').click(ev => this._rollDice(ev, html));
-
         diceRollbtn[0].addEventListener('click', ev => this.PopupSheet(ev, html));
 
+        this._createDiceTable(html);
+    }
+
+    static _createDiceTableHtmlOneCell(diceType, diceRoll, isLast) {
+        
+        let s = [];
+        s.push('<li data-dice-type="', diceType, '" data-dice-roll="', diceRoll, '"');
+        
+        if (diceRoll == 1) {
+            
+            s.push(' class="sdr-col1">');
+            
+            if(diceType == 100) {
+                s.push('<i class="df-d10-10" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
+                s.push('<i class="df-d10-10" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
+            } else {
+                s.push('<i class="df-d', diceType, '-', diceType, '" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
+            }
+            
+            s.push(' d' + diceType);
+            
+        } else if (isLast) {
+            s.push(' class="sdr-lastcol">' + diceRoll);
+        } else {
+            s.push('>' + diceRoll);
+        }
+        s.push('</li>');
+        
+        return s.join('');
+    }
+    
+    static _createDiceTableHtmlOneLine(diceType, maxDiceCount) {
+        
+        let s = [];
+        
+        s.push('<ul>');
+        
+        for(let i = 1; i <= maxDiceCount; ++i) {
+            let isLast = (i == maxDiceCount);
+            s.push(this._createDiceTableHtmlOneCell(diceType, i, isLast));
+        }
+        
+        s.push('</ul>');
+        
+        return s.join('');
+    }
+
+    static _createDiceTableHtml(maxDiceCount) {
+        
+        let s = [];
+        
+        s.push(this._createDiceTableHtmlOneLine(4, maxDiceCount));
+        s.push(this._createDiceTableHtmlOneLine(6, maxDiceCount));
+        s.push(this._createDiceTableHtmlOneLine(8, maxDiceCount));
+        s.push(this._createDiceTableHtmlOneLine(10, maxDiceCount));
+        s.push(this._createDiceTableHtmlOneLine(12, maxDiceCount));
+        s.push(this._createDiceTableHtmlOneLine(20, maxDiceCount));
+        s.push(this._createDiceTableHtmlOneLine(100, maxDiceCount));
+        
+        return s.join('');
+    }
+    
+    static _cachedMaxDiceCount = NaN;
+    
+    static async _createDiceTable(html) {
+        
+        let maxDiceCount = parseInt(game.settings.get("simple-dice-roller", "maxDiceCount"), 10);
+        
+        if(isNaN(maxDiceCount) || (maxDiceCount < 1) || (maxDiceCount > 30)) {
+            maxDiceCount = 5;
+        }
+
+        if (this._cachedMaxDiceCount == maxDiceCount) {
+            return;
+        }
+        
+        this._cachedMaxDiceCount = maxDiceCount;
+
+        const tableContentsHtml = this._createDiceTableHtml(maxDiceCount);
+        
+        const tableContents = $(tableContentsHtml);
+
+        html.find('.simple-dice-roller-popup ul').remove();
+
+        html.find('.simple-dice-roller-popup').append(tableContents);
+
+        html.find('.simple-dice-roller-popup li').click(ev => this._rollDice(ev, html));
     }
 
     static async _rollDice(event, html) {
@@ -109,6 +145,7 @@ class SimpleDiceRoller {
 
     static async _open(event, html) {
         //console.log("SDR | opened");
+        this._createDiceTable(html);
         html.find('.scene-control').removeClass('active');
         html.find('#SDRpopup').show();
         html.find('.sdr-scene-control').addClass('active');
@@ -119,5 +156,16 @@ class SimpleDiceRoller {
 }
 
 Hooks.on('renderSceneControls', (controls, html) => { SimpleDiceRoller.Init(controls, html); });
+
+Hooks.once("init", () => {
+	game.settings.register("simple-dice-roller", "maxDiceCount", {
+		name: game.i18n.localize("simpleDiceRoller.maxDiceCount.name"),
+		hint: game.i18n.localize("simpleDiceRoller.maxDiceCount.hint"),
+		scope: "world",
+		config: true,
+		default: 8,
+		type: Number
+	});
+});
 
 console.log("SDR | Simple Dice Roller loaded");
