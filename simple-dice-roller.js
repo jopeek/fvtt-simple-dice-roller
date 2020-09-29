@@ -90,10 +90,6 @@ class SimpleDiceRoller {
         if(isNaN(maxDiceCount) || (maxDiceCount < 1) || (maxDiceCount > 30)) {
             maxDiceCount = 5;
         }
-
-        if (this._cachedMaxDiceCount == maxDiceCount) {
-            return;
-        }
         
         this._cachedMaxDiceCount = maxDiceCount;
 
