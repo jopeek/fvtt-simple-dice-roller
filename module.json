@@ -2,9 +2,9 @@
 	"name": "simple-dice-roller",
 	"title": "Simple Dice Roller",
 	"description": "Simple module that allows for quick rolling of common dice.",
-	"version": "1.1.1",
+	"version": "1.0.1",
 	"minimumCoreVersion": "0.4.4",
-	"compatibleCoreVersion": "0.6.6",
+	"compatibleCoreVersion": "0.5.7",
 	"author": "Jan Ole Peek (ChalkOne)",
 	"scripts": ["./simple-dice-roller.js"],
 	"styles": [
@@ -22,7 +22,7 @@
 		},
 		{
 			"lang": "fr",
-			"name": "FranÃ§ais",
+			"name": "Français",
 			"path": "./lang/fr.json"
 		}
 	]
