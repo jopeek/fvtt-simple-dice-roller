@@ -123,7 +123,7 @@ class SimpleDiceRoller {
     
     static async PopupSheet(event, html) {
         //console.log("SDR | clicked");
-
+        canvas.stage.children.filter(layer => layer._active).forEach(layer => layer.deactivate());
         if (html.find('.sdr-scene-control').hasClass('active')) {
             this._close(event, html);
         } else {
@@ -136,6 +136,7 @@ class SimpleDiceRoller {
         html.find('#SDRpopup').hide();
         html.find('.sdr-scene-control').removeClass('active');
         html.find('.scene-control').first().addClass('active');
+        
         event.stopPropagation();
     }
 
@@ -163,5 +164,7 @@ Hooks.once("init", () => {
 		type: Number
 	});
 });
+
+
 
 console.log("SDR | Simple Dice Roller loaded");
