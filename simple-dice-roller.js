@@ -123,7 +123,7 @@ class SimpleDiceRoller {
     
     static async PopupSheet(event, html) {
         //console.log("SDR | clicked");
-        canvas.stage.children.filter(layer => layer._active).forEach(layer => layer.deactivate());
+        //canvas.stage.children.filter(layer => layer._active).forEach(layer => layer.deactivate());
         if (html.find('.sdr-scene-control').hasClass('active')) {
             this._close(event, html);
         } else {
