@@ -1,3 +1,4 @@
+[![Github All Releases](https://img.shields.io/github/downloads/jopeek/fvtt-simple-dice-roller/total.svg)]() [![Donate](https://img.shields.io/badge/Donate-BuyMeACoffee-green.svg)](https://www.buymeacoffee.com/ChalkOne)
 # FVTT - Simple Dice Roller
 
 Simple module that allows for quick rolling of common dice.
