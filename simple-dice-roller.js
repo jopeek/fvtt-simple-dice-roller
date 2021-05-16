@@ -70,6 +70,7 @@ class SimpleDiceRoller {
         
         let s = [];
         
+        s.push(this._createDiceTableHtmlOneLine(2, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(4, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(6, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(8, maxDiceCount));
