@@ -73,6 +73,7 @@ class SimpleDiceRoller {
         s.push(this._createDiceTableHtmlOneLine(2, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(4, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(6, maxDiceCount));
+        s.push(this._createDiceTableHtmlOneLine("f", maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(8, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(10, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(12, maxDiceCount));
