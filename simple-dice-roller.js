@@ -31,14 +31,21 @@ class SimpleDiceRoller {
             
             s.push(' class="sdr-col1">');
             
-            if(diceType == 100) {
+            if(diceType == 'f') {
+                s.push('<i class="far fa-plus-square" "data-dice-type="', diceType, '" data-dice-roll="1"></i>');
+            } else if(diceType == 100) {
                 s.push('<i class="df-d10-10" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
                 s.push('<i class="df-d10-10" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
             } else {
                 s.push('<i class="df-d', diceType, '-', diceType, '" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
             }
             
-            s.push(' d' + diceType);
+            if (diceType == 'f') {
+                s.push(' Fate');
+            }
+            else {
+                s.push(' d' + diceType);
+            }
             
         } else if (isLast) {
             s.push(' class="sdr-lastcol">' + diceRoll);
@@ -66,7 +73,7 @@ class SimpleDiceRoller {
         return s.join('');
     }
 
-    static _createDiceTableHtml(maxDiceCount) {
+    static _createDiceTableHtml(maxDiceCount,enableFateDice) {
         
         let s = [];
         
@@ -78,15 +85,22 @@ class SimpleDiceRoller {
         s.push(this._createDiceTableHtmlOneLine(12, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(20, maxDiceCount));
         s.push(this._createDiceTableHtmlOneLine(100, maxDiceCount));
+        if (enableFateDice) {
+            s.push(this._createDiceTableHtmlOneLine('f', maxDiceCount));
+        }
         
+		
         return s.join('');
     }
     
     static _cachedMaxDiceCount = NaN;
+    static _cachedEnableFateDice = false;
     
     static async _createDiceTable(html) {
         
         let maxDiceCount = parseInt(game.settings.get("simple-dice-roller", "maxDiceCount"), 10);
+
+        let enableFateDice = Boolean(game.settings.get("simple-dice-roller", "enableFateDice"));
         
         if(isNaN(maxDiceCount) || (maxDiceCount < 1) || (maxDiceCount > 30)) {
             maxDiceCount = 5;
@@ -94,7 +108,9 @@ class SimpleDiceRoller {
         
         this._cachedMaxDiceCount = maxDiceCount;
 
-        const tableContentsHtml = this._createDiceTableHtml(maxDiceCount);
+        this._cachedEnableFateDice = enableFateDice;
+
+        const tableContentsHtml = this._createDiceTableHtml(maxDiceCount, enableFateDice);
         
         const tableContents = $(tableContentsHtml);
 
@@ -163,6 +179,14 @@ Hooks.once("init", () => {
 		config: true,
 		default: 8,
 		type: Number
+    });
+    game.settings.register("simple-dice-roller", "enableFateDice", {
+		name: game.i18n.localize("simpleDiceRoller.enableFateDice.name"),
+		hint: game.i18n.localize("simpleDiceRoller.enableFateDice.hint"),
+		scope: "world",
+		config: true,
+		default: false,
+		type: Boolean
 	});
 });
 
