@@ -3,5 +3,7 @@
 	"I18N.MAINTAINERS": "@Viriato139ac#0342",
 
 	"simpleDiceRoller.maxDiceCount.name": "Número máximo de dados en una tirada",
-	"simpleDiceRoller.maxDiceCount.hint": "Determina cuál es el número máximo de dados que se pueden tirar usando Simple Dice Roller"
+	"simpleDiceRoller.maxDiceCount.hint": "Determina cuál es el número máximo de dados que se pueden tirar usando Simple Dice Roller",
+	"simpleDiceRoller.enableFateDice.name": "Habilitar dados Fate",
+	"simpleDiceRoller.enableFateDice.hint": "Si no sabe lo que son los dados Fate, no debería habilitar esta opción"
 }
