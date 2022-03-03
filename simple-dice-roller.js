@@ -11,8 +11,8 @@ class SimpleDiceRoller {
         );
         const diceRollControls = `
             <ol class="sub-controls app control-tools sdr-sub-controls">
-                <div id="SDRpopup" class="simple-dice-roller-popup control-tool">
-                </div>
+                <li id="SDRpopup" class="simple-dice-roller-popup control-tool">
+                </li>
             </ol>
         `;
 
