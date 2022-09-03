@@ -6,9 +6,9 @@
   "authors": [],
   "url": "https://github.com/jopeek/fvtt-simple-dice-roller",
   "flags": {},
-  "version": "1.3.5",
+  "version": "1.3.6",
   "minimumCoreVersion": "9",
-  "compatibleCoreVersion": "9",
+  "compatibleCoreVersion": "10",
   "scripts": [
     "./simple-dice-roller.js"
   ],
