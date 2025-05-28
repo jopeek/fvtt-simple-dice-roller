@@ -1,200 +1,207 @@
 class SimpleDiceRoller {
+  static _createDiceTableHtmlOneCell(diceType, diceRoll, isLast) {
+    let s = [];
+    s.push(
+      '<li data-dice-type="',
+      diceType,
+      '" data-dice-roll="',
+      diceRoll,
+      '"'
+    );
 
-    static async Init(controls, html) {
+    if (diceRoll == 1) {
+      s.push(' class="sdr-col1">');
 
-        const diceRollbtn = $(
-            `
-            <li class="scene-control sdr-scene-control" data-control="simple-dice-roller" title="Simple Dice Roller">
-                <i class="fas fa-dice-d20"></i>
-            </li>
-            `
+      if (diceType == "f") {
+        s.push(
+          '<i class="far fa-plus-square" "data-dice-type="',
+          diceType,
+          '" data-dice-roll="1"></i>'
         );
-        const diceRollControls = `
+      } else if (diceType == 100) {
+        s.push(
+          '<i class="df-d10-10" data-dice-type="',
+          diceType,
+          '" data-dice-roll="1"></i>'
+        );
+        s.push(
+          '<i class="df-d10-10" data-dice-type="',
+          diceType,
+          '" data-dice-roll="1"></i>'
+        );
+      } else {
+        s.push(
+          '<i class="df-d',
+          diceType,
+          "-",
+          diceType,
+          '" data-dice-type="',
+          diceType,
+          '" data-dice-roll="1"></i>'
+        );
+      }
+
+      if (diceType == "f") {
+        s.push(" Fate");
+      } else {
+        s.push(" d" + diceType);
+      }
+    } else if (isLast) {
+      s.push(' class="sdr-lastcol">' + diceRoll);
+    } else {
+      s.push(">" + diceRoll);
+    }
+    s.push("</li>");
+
+    return s.join("");
+  }
+
+  static _createDiceTableHtmlOneLine(diceType, maxDiceCount) {
+    let s = [];
+
+    s.push("<ul>");
+
+    for (let i = 1; i <= maxDiceCount; ++i) {
+      let isLast = i == maxDiceCount;
+      s.push(this._createDiceTableHtmlOneCell(diceType, i, isLast));
+    }
+
+    s.push("</ul>");
+
+    return s.join("");
+  }
+
+  static _createDiceTableHtml(maxDiceCount, enableFateDice) {
+    let s = [];
+
+    s.push(this._createDiceTableHtmlOneLine(2, maxDiceCount));
+    s.push(this._createDiceTableHtmlOneLine(4, maxDiceCount));
+    s.push(this._createDiceTableHtmlOneLine(6, maxDiceCount));
+    s.push(this._createDiceTableHtmlOneLine(8, maxDiceCount));
+    s.push(this._createDiceTableHtmlOneLine(10, maxDiceCount));
+    s.push(this._createDiceTableHtmlOneLine(12, maxDiceCount));
+    s.push(this._createDiceTableHtmlOneLine(20, maxDiceCount));
+    s.push(this._createDiceTableHtmlOneLine(100, maxDiceCount));
+    if (enableFateDice) {
+      s.push(this._createDiceTableHtmlOneLine("f", maxDiceCount));
+    }
+
+    return s.join("");
+  }
+
+  static _cachedMaxDiceCount = NaN;
+  static _cachedEnableFateDice = false;
+
+  static async _createDiceTable(html) {
+    console.log("SDR | Creating dice table");
+    let maxDiceCount = parseInt(
+      game.settings.get("simple-dice-roller", "maxDiceCount"),
+      10
+    );
+
+    let enableFateDice = Boolean(
+      game.settings.get("simple-dice-roller", "enableFateDice")
+    );
+
+    if (isNaN(maxDiceCount) || maxDiceCount < 1 || maxDiceCount > 30) {
+      maxDiceCount = 5;
+    }
+
+    this._cachedMaxDiceCount = maxDiceCount;
+
+    this._cachedEnableFateDice = enableFateDice;
+
+    const tableContentsHtml = this._createDiceTableHtml(
+      maxDiceCount,
+      enableFateDice
+    );
+
+    const tableContents = $(tableContentsHtml);
+
+    html.find("ul").remove();
+
+    html.append(tableContents);
+
+    html.find("li").click((ev) => this._rollDice(ev, html));
+  }
+
+  static async _rollDice(event, html) {
+    var diceType = event.target.dataset.diceType;
+    var diceRoll = event.target.dataset.diceRoll;
+
+    var formula = diceRoll + "d" + diceType;
+
+    let r = new Roll(formula);
+
+    r.toMessage({
+      user: game.user._id,
+    });
+
+    const $popup = $(".simple-dice-roller-popup");
+    $popup.hide();
+  }
+
+}
+
+Hooks.on("renderSceneControls", (controls, html) => {
+  if (
+    !document.querySelector(
+      "#scene-controls-layers button[data-control='simple-dice-roller']"
+    )
+  ) {
+    document.querySelector("#scene-controls-layers").insertAdjacentHTML(
+      "beforeend",
+      `<li>
+            <button type="button" class="control ui-control icon fas fa-dice-d20" role="tab" data-action="simple-dice-roller" data-control="simple-dice-roller" data-tooltip="Simple Dice Roller" aria-controls="scene-controls-tools"></button>
             <ol class="sub-controls app control-tools sdr-sub-controls">
                 <li id="SDRpopup" class="simple-dice-roller-popup control-tool">
                 </li>
             </ol>
-        `;
+        </li>
+        `
+    );
 
-        html.find(".main-controls").append(diceRollbtn);
-        html.append(diceRollControls);
+    console.log("SDR | Simple Dice Roller button added to scene controls");
 
-        diceRollbtn[0].addEventListener('click', ev => this.PopupSheet(ev, html));
+    // Always use jQuery to select the popup
+    const $popup = $(".simple-dice-roller-popup");
+    SimpleDiceRoller._createDiceTable($popup);
+    $popup.hide();
 
-        this._createDiceTable(html);
-    }
-
-    static _createDiceTableHtmlOneCell(diceType, diceRoll, isLast) {
-
-        let s = [];
-        s.push('<li data-dice-type="', diceType, '" data-dice-roll="', diceRoll, '"');
-
-        if (diceRoll == 1) {
-
-            s.push(' class="sdr-col1">');
-
-            if (diceType == 'f') {
-                s.push('<i class="far fa-plus-square" "data-dice-type="', diceType, '" data-dice-roll="1"></i>');
-            } else if (diceType == 100) {
-                s.push('<i class="df-d10-10" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
-                s.push('<i class="df-d10-10" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
-            } else {
-                s.push('<i class="df-d', diceType, '-', diceType, '" data-dice-type="', diceType, '" data-dice-roll="1"></i>');
-            }
-
-            if (diceType == 'f') {
-                s.push(' Fate');
-            } else {
-                s.push(' d' + diceType);
-            }
-
-        } else if (isLast) {
-            s.push(' class="sdr-lastcol">' + diceRoll);
+    document
+      .querySelector(
+        "#scene-controls-layers button[data-control='simple-dice-roller']"
+      )
+      .addEventListener("click", (ev) => {
+        console.log("SDR | Simple Dice Roller button clicked");
+        const $popup = $(".simple-dice-roller-popup");
+        // Toggle display between none and block
+        if ($popup.is(":visible")) {
+          $popup.hide();
         } else {
-            s.push('>' + diceRoll);
+          $popup.show();
         }
-        s.push('</li>');
-
-        return s.join('');
-    }
-
-    static _createDiceTableHtmlOneLine(diceType, maxDiceCount) {
-
-        let s = [];
-
-        s.push('<ul>');
-
-        for (let i = 1; i <= maxDiceCount; ++i) {
-            let isLast = (i == maxDiceCount);
-            s.push(this._createDiceTableHtmlOneCell(diceType, i, isLast));
-        }
-
-        s.push('</ul>');
-
-        return s.join('');
-    }
-
-    static _createDiceTableHtml(maxDiceCount, enableFateDice) {
-
-        let s = [];
-
-        s.push(this._createDiceTableHtmlOneLine(2, maxDiceCount));
-        s.push(this._createDiceTableHtmlOneLine(4, maxDiceCount));
-        s.push(this._createDiceTableHtmlOneLine(6, maxDiceCount));
-        s.push(this._createDiceTableHtmlOneLine(8, maxDiceCount));
-        s.push(this._createDiceTableHtmlOneLine(10, maxDiceCount));
-        s.push(this._createDiceTableHtmlOneLine(12, maxDiceCount));
-        s.push(this._createDiceTableHtmlOneLine(20, maxDiceCount));
-        s.push(this._createDiceTableHtmlOneLine(100, maxDiceCount));
-        if (enableFateDice) {
-            s.push(this._createDiceTableHtmlOneLine('f', maxDiceCount));
-        }
-
-
-        return s.join('');
-    }
-
-    static _cachedMaxDiceCount = NaN;
-    static _cachedEnableFateDice = false;
-
-    static async _createDiceTable(html) {
-
-        let maxDiceCount = parseInt(game.settings.get("simple-dice-roller", "maxDiceCount"), 10);
-
-        let enableFateDice = Boolean(game.settings.get("simple-dice-roller", "enableFateDice"));
-
-        if (isNaN(maxDiceCount) || (maxDiceCount < 1) || (maxDiceCount > 30)) {
-            maxDiceCount = 5;
-        }
-
-        this._cachedMaxDiceCount = maxDiceCount;
-
-        this._cachedEnableFateDice = enableFateDice;
-
-        const tableContentsHtml = this._createDiceTableHtml(maxDiceCount, enableFateDice);
-
-        const tableContents = $(tableContentsHtml);
-
-        html.find('.simple-dice-roller-popup ul').remove();
-
-        html.find('.simple-dice-roller-popup').append(tableContents);
-
-        html.find('.simple-dice-roller-popup li').click(ev => this._rollDice(ev, html));
-    }
-
-    static async _rollDice(event, html) {
-
-        var diceType = event.target.dataset.diceType;
-        var diceRoll = event.target.dataset.diceRoll;
-
-        var formula = diceRoll + "d" + diceType;
-
-        let r = new Roll(formula);
-
-        r.toMessage({
-            user: game.user._id,
-        })
-
-        this._close(event, html);
-
-    }
-
-    static async PopupSheet(event, html) {
-        //console.log("SDR | clicked");
-        //canvas.stage.children.filter(layer => layer._active).forEach(layer => layer.deactivate());
-        if (html.find('.sdr-scene-control').hasClass('active')) {
-            this._close(event, html);
-        } else {
-            this._open(event, html);
-        }
-    }
-
-    static async _close(event, html) {
-        //console.log("SDR | closed");
-        //html.find('#SDRpopup').hide();
-        html.find('.sdr-scene-control').removeClass('active');
-        html.find('.sdr-sub-controls').removeClass('active');
-        html.find('.scene-control').first().addClass('active');
-
-        event.stopPropagation();
-    }
-
-    static async _open(event, html) {
-        //console.log("SDR | opened");
-        this._createDiceTable(html);
-        html.find('.scene-control').removeClass('active');
-        html.find('.sub-controls').removeClass('active');
-        //html.find('#SDRpopup').show();
-        html.find('.sdr-scene-control').addClass('active');
-        html.find('.sdr-sub-controls').addClass('active');
-        event.stopPropagation();
-    }
-
-
-}
-
-Hooks.on('renderSceneControls', (controls, html) => {
-    console.log("SDR here", html);
-    SimpleDiceRoller.Init(controls, html);
+      });
+  }
 });
 
 Hooks.once("init", () => {
-    game.settings.register("simple-dice-roller", "maxDiceCount", {
-        name: game.i18n.localize("simpleDiceRoller.maxDiceCount.name"),
-        hint: game.i18n.localize("simpleDiceRoller.maxDiceCount.hint"),
-        scope: "world",
-        config: true,
-        default: 8,
-        type: Number
-    });
-    game.settings.register("simple-dice-roller", "enableFateDice", {
-        name: game.i18n.localize("simpleDiceRoller.enableFateDice.name"),
-        hint: game.i18n.localize("simpleDiceRoller.enableFateDice.hint"),
-        scope: "world",
-        config: true,
-        default: false,
-        type: Boolean
-    });
+  game.settings.register("simple-dice-roller", "maxDiceCount", {
+    name: game.i18n.localize("simpleDiceRoller.maxDiceCount.name"),
+    hint: game.i18n.localize("simpleDiceRoller.maxDiceCount.hint"),
+    scope: "world",
+    config: true,
+    default: 8,
+    type: Number,
+  });
+  game.settings.register("simple-dice-roller", "enableFateDice", {
+    name: game.i18n.localize("simpleDiceRoller.enableFateDice.name"),
+    hint: game.i18n.localize("simpleDiceRoller.enableFateDice.hint"),
+    scope: "world",
+    config: true,
+    default: false,
+    type: Boolean,
+  });
 });
 
 console.log("SDR | Simple Dice Roller loaded");

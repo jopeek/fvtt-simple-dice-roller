@@ -4,17 +4,13 @@
     height: auto !important;
 }
 
-.simple-dice-roller-popup:hover {
-    border: 1px solid #333 !important;
-    box-shadow: 0 0 10px #000 !important;
-}
-
 .simple-dice-roller-popup ul {
     list-style-type: none;
     margin: 0;
     padding: 0;
     border-bottom: 1px solid #333;
     display: flex;
+    align-items: center;
 }
 
 .simple-dice-roller-popup .sdr-lastrow {
@@ -36,8 +32,9 @@
     text-align: center;
     padding: 5px;
     border-right: 1px solid #333;
-    height: 48px;
     cursor: pointer;
+    border-bottom: 1px solid transparent;
+    border-top: 1px solid transparent;
 }
 
 .simple-dice-roller-popup li:hover {
@@ -45,6 +42,7 @@
     border: 1px solid red;
     border-bottom: 1px solid #ff6400;
     box-shadow: 0 0 10px #ff6400;
+    cursor: pointer;
 }
 
 .simple-dice-roller-popup li i {
@@ -54,5 +52,20 @@
 
 .sdr-sub-controls {
     position: absolute;
-    left: 4.2rem;
+    left: 56px;
+    list-style: none;
+    padding-left: 0;
+    margin: 0;
+    margin-top: -32px;
+    pointer-events: auto;
+}
+
+.control.icon.df-d2-2,
+.control.icon.df-d4-4,
+.control.icon.df-d6-6,
+.control.icon.df-d8-8,
+.control.icon.df-d12-12,
+.control.icon.df-d20-20,
+.control.icon.df-d100-100 {
+  font-size: 1.5rem;
 }
