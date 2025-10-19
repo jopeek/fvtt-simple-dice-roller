@@ -2,7 +2,7 @@
   "title": "Simple Dice Roller",
   "description": "Simple module that allows for quick rolling of common dice.",
   "url": "https://github.com/jopeek/fvtt-simple-dice-roller",
-  "version": "13.0.1",
+  "version": "13.0.2",
   "scripts": [
     "simple-dice-roller.js"
   ],

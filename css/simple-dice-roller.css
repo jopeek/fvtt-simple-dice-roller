@@ -1,3 +1,7 @@
+body #interface #ui-left #ui-left-column-1 #scene-controls {
+    overflow: visible;
+}
+
 #controls .simple-dice-roller-popup.control-tool {
     font-size: 18px !important;
     width: auto !important;
@@ -24,6 +28,7 @@
 .simple-dice-roller-popup .sdr-col1 {
     width: 110px;
     text-align: left;
+    text-wrap-mode: nowrap;
 }
 
 .simple-dice-roller-popup li {
@@ -43,6 +48,7 @@
     border-bottom: 1px solid #ff6400;
     box-shadow: 0 0 10px #ff6400;
     cursor: pointer;
+    border-radius: 5px;
 }
 
 .simple-dice-roller-popup li i {
@@ -52,12 +58,14 @@
 
 .sdr-sub-controls {
     position: absolute;
-    left: 56px;
+    left: 40px;
     list-style: none;
     padding-left: 0;
     margin: 0;
     margin-top: -32px;
     pointer-events: auto;
+    width: 400px;
+    min-width: 400px;
 }
 
 .control.icon.df-d2-2,
